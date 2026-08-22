@@ -47,11 +47,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # No `publish` input on purpose — this step only ever creates or
-      # updates the Version Packages PR from pending .changeset/*.md
-      # files. It never runs a publish command, so it needs no npm
-      # credentials and can't touch the registry.
+      - name: Check for pending changesets
+        id: check-changesets
+        run: |
+          pending=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l)
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
+
       - name: Version packages
+        if: steps.check-changesets.outputs.pending != '0'
         uses: changesets/action@v1
         with:
           version: pnpm changeset version
