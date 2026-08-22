@@ -55,8 +55,7 @@ jobs:
 
       - name: Version packages
         if: steps.check-changesets.outputs.pending != '0'
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: pnpm changeset version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          version-script: pnpm changeset version
+          github-token: ${{ secrets.GITHUB_TOKEN }}
