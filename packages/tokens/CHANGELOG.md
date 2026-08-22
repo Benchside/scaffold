@@ -1,5 +1,11 @@
 # @benchside/scaffold-tokens
 
+## 0.1.0-beta.1
+
+### Patch Changes
+
+- [#2](https://github.com/Benchside/scaffold/pull/2) [`eeee151`](https://github.com/Benchside/scaffold/commit/eeee151aa32e633f02d106d52e9023b3f151327a) Thanks [@jaypark94](https://github.com/jaypark94)! - Fix GitHub repository URL casing (benchside -> Benchside) in package metadata
+
 ## 0.1.0-beta.0
 
 ### Minor Changes
