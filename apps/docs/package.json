@@ -1,0 +1,44 @@
+{
+  "name": "docs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Storybook documentation site for @benchside/scaffold",
+  "dependencies": {
+    "@benchside/scaffold-react": "workspace:*",
+    "@benchside/scaffold-solid": "workspace:*",
+    "@benchside/scaffold-tailwind": "workspace:*",
+    "@benchside/scaffold-theme-default": "workspace:*",
+    "@benchside/scaffold-tokens": "workspace:*",
+    "@benchside/scaffold-vue": "workspace:*",
+    "@internationalized/date": "^3.12.2",
+    "lucide-react": "^1.31.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "scripts": {
+    "build": "storybook build",
+    "storybook": "storybook dev -p 6006",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:browser": "playwright test",
+    "test:perf": "playwright test --config playwright.perf.config.ts"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchside/scaffold.git",
+    "directory": "apps/docs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0",
+    "@storybook/addon-a11y": "^10.5.8",
+    "@storybook/addon-docs": "^10.5.8",
+    "@storybook/react-vite": "^10.5.8",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "storybook": "^10.5.8",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.2.1"
+  }
+}

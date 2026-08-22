@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`spacing.css semantic mapping > captures the full resolved spacing -> primitive variable map 1`] = `
+{
+  "--space-inline-2xl": "32px",
+  "--space-inline-2xs": "2px",
+  "--space-inline-lg": "16px",
+  "--space-inline-md": "12px",
+  "--space-inline-sm": "8px",
+  "--space-inline-xl": "24px",
+  "--space-inline-xs": "4px",
+  "--space-inset-2xl": "32px",
+  "--space-inset-2xs": "2px",
+  "--space-inset-3xl": "48px",
+  "--space-inset-lg": "16px",
+  "--space-inset-md": "12px",
+  "--space-inset-sm": "8px",
+  "--space-inset-xl": "24px",
+  "--space-inset-xs": "4px",
+  "--space-stack-2xl": "48px",
+  "--space-stack-2xs": "2px",
+  "--space-stack-3xl": "64px",
+  "--space-stack-lg": "24px",
+  "--space-stack-md": "16px",
+  "--space-stack-sm": "8px",
+  "--space-stack-xl": "32px",
+  "--space-stack-xs": "4px",
+}
+`;

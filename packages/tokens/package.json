@@ -1,0 +1,55 @@
+{
+  "name": "@benchside/scaffold-tokens",
+  "version": "0.0.1",
+  "description": "Primitive design tokens for @benchside/scaffold — DTCG tokens.json built to CSS, JS, and TypeScript.",
+  "type": "module",
+  "main": "./dist/tokens.js",
+  "module": "./dist/tokens.js",
+  "types": "./dist/tokens.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    },
+    "./css": "./dist/tokens.css",
+    "./css-p3": "./dist/tokens-p3.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsx sd.config.ts",
+    "watch": "tsx src/scripts/watch-tokens.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "validate": "tsx src/scripts/validate-tokens.ts",
+    "docs": "tsx src/scripts/generate-docs.ts",
+    "prepublishOnly": "node ../../scripts/copy-license.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "apca-w3": "^0.1.9",
+    "culori": "^4.0.2",
+    "style-dictionary": "^5.5.1",
+    "tsx": "^4.23.12"
+  },
+  "keywords": [
+    "design-tokens",
+    "dtcg",
+    "css-variables",
+    "design-system"
+  ],
+  "author": "Benchside",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchside/scaffold.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://github.com/benchside/scaffold/tree/main/packages/tokens",
+  "bugs": "https://github.com/benchside/scaffold/issues",
+  "publishConfig": {
+    "access": "public"
+  }
+}

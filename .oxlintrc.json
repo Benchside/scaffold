@@ -1,0 +1,26 @@
+{
+  "plugins": ["react"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["dist", "storybook-static", "node_modules", "_to_delete"],
+  "jsPlugins": ["./scripts/oxlint-plugins/index.js"],
+  "rules": {
+    "scaffold/no-hardcoded-colors": "error",
+    "unicorn/no-array-sort": "off",
+    "react/react-in-jsx-scope": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.test.mjs", "**/__tests__/**"],
+      "rules": {
+        "scaffold/no-hardcoded-colors": "off"
+      }
+    }
+  ]
+}

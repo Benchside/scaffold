@@ -1,0 +1,15 @@
+/* Tier 1 only — @benchside/scaffold-react's own precompiled dist/style.css
+ * bundles the resolved token/theme variables and every utility class the
+ * component set itself uses. This is a deliberate regression check for
+ * that build output: if a story or MDX page needs something Tier 1
+ * doesn't cover, this is where it'll show up. */
+@import "@benchside/scaffold-react/style.css";
+
+/* No component sets its own baseline text/background color (Badge/Card
+ * variants only override where they need to) — without this, plain text
+ * content stays the browser's UA-default black and never reacts to
+ * [data-theme], since nothing else in the import chain above sets it. */
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+}

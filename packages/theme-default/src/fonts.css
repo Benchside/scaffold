@@ -1,0 +1,45 @@
+/**
+ * @benchside/scaffold-theme-default — self-hosted @font-face
+ *
+ * Inter + JetBrains Mono, both variable, self-hosted (no Google Fonts /
+ * third-party CDN dependency). The actual font binaries come from
+ * `@fontsource-variable/inter` and `@fontsource-variable/jetbrains-mono`
+ * — npm-distributed, correctly licensed (OFL) and subset, versioned in
+ * this package's own package.json/lockfile like any other dependency,
+ * rather than binary font files vendored by hand into this repo.
+ *
+ * `wght.css` (not `index.css`/`standard.css`, which are byte-identical
+ * to it in the installed package; `wght.css` is just the more legible
+ * name) declares the full 100–900 `@font-face` weight
+ * range as a single variable-font file per script subset, with
+ * `font-display: swap` and `unicode-range` already set correctly by
+ * fontsource — nothing to re-derive here.
+ *
+ * This lives in theme-default (not tokens, not a dedicated fonts
+ * package) because per-tool theme packages (Calc, Construct, ...) only
+ * ever override accent-* on top of an existing theme-default import —
+ * declaring @font-face once here means every tool gets it for free with
+ * no per-theme duplication.
+ *
+ * IMPORTANT: fontsource's `@font-face` rules name the family "Inter
+ * Variable" / "JetBrains Mono Variable" (deliberately distinct from a
+ * plain "Inter"/"JetBrains Mono", so a self-hosted variable font never
+ * collides with a system-installed static one) — that's exactly why
+ * tokens.json's `font.family.sans`/`font.family.mono` primitives list
+ * the " Variable" name first, with the bare name kept as a secondary
+ * fallback for a system-installed static copy before dropping to
+ * platform sans-serif/monospace. Do not "fix" that primitive back to a
+ * bare "Inter" — it would silently stop matching these @font-face
+ * rules and fall through to the system fallback stack instead.
+ */
+
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
+
+/* NOTE: Inter Variable's wght axis covers 100-900 (matches
+ * font.weight's full thin->black range) but JetBrains Mono Variable's
+ * only goes to 100-800 — there is no real 900/"black" weight for the
+ * mono family. No current typography.css role assigns weight 900 to
+ * font-mono (code/code-lg both use regular/400), but if one ever does,
+ * the browser will silently clamp to 800 rather than error — verified
+ * in fonts.test.ts's weight-range check. */

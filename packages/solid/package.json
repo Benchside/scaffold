@@ -1,0 +1,30 @@
+{
+  "name": "@benchside/scaffold-solid",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Solid components for @benchside/scaffold, the Benchside design system (in progress).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "echo \"@benchside/scaffold-solid: build not yet implemented\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "author": "Benchside",
+  "license": "MIT",
+  "devDependencies": {
+    "@solidjs/testing-library": "^0.8.10",
+    "vite-plugin-solid": "^2.11.14"
+  }
+}

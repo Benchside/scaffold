@@ -1,0 +1,173 @@
+/**
+ * @benchside/scaffold-theme-default — semantic typography tokens
+ *
+ * Unlike color, typography doesn't vary by theme — a heading is the
+ * same size/weight in light and dark mode, and per-tool themes (Calc,
+ * Construct, ...) only ever override accent-*. So this file is a single
+ * theme-agnostic `:root` block, not a light/dark pair like
+ * light.css/dark.css.
+ *
+ * Each role is a *composite* semantic token — family + size + weight +
+ * line-height + letter-spacing together — because that's what "a
+ * heading" or "a caption" actually means. Every value chains to a Task
+ * 0.2.5 primitive (`--font-size-*`, `--font-weight-*`,
+ * `--font-line-height-*`, `--font-letter-spacing-*`, `--font-family-*`)
+ * — never a raw literal — same "tokens all the way down" rule as color.
+ *
+ * Each role additionally gets a `--font-<role>` SHORTHAND token, built
+ * from the CSS `font` shorthand grammar (`<weight> <size>/<line-height>
+ * <family>`), so the common case is one declaration
+ * (`font: var(--font-body);`) instead of three. This is a real CSS
+ * mechanism, not a Scaffold convention: custom properties are just
+ * token streams substituted at used-value time, and the substituted
+ * tokens happen to satisfy `font`'s grammar. The per-property tokens
+ * stay too, for the cases that need to mix (e.g. borrow heading-2's
+ * size with a different weight).
+ *
+ * IMPORTANT — letter-spacing is NOT part of the CSS `font` shorthand
+ * (never has been, in any spec level); this is a hard CSS limitation,
+ * not something token design can route around. Any role whose
+ * letter-spacing isn't `normal` (the heading-* roles use `tight`;
+ * caption uses `wide`) needs `letter-spacing: var(--font-<role>-
+ * letter-spacing)` as a second declaration alongside the shorthand.
+ *
+ * Role set is deliberately restrained for a data-dense scientific tool,
+ * not a marketing/content site: 4 heading levels (page -> panel/card
+ * title), no display/eyebrow/overline roles.
+ *
+ * `data` vs `code`/`code-lg`: numeric results and table cells do NOT
+ * default to the mono family. `font-variant-numeric: tabular-nums`
+ * gives digit alignment on the sans family itself (Inter supports it),
+ * which is denser and visually consistent with surrounding UI text —
+ * the same approach dashboards like GitHub/Vercel use. `code`/`code-lg`
+ * (mono) stay reserved for where character width must be uniform
+ * beyond just digits: literal code, and — relevant for a bio-tooling
+ * ecosystem — raw sequence/identifier data (DNA/protein sequences,
+ * hashes, IDs) where fixed-width alignment is structural, not cosmetic.
+ */
+
+:root {
+  /* Heading — page title down to panel/card/group title. */
+  --font-heading-1-family: var(--font-family-sans);
+  --font-heading-1-size: var(--font-size-3xl);
+  --font-heading-1-weight: var(--font-weight-semibold);
+  --font-heading-1-line-height: var(--font-line-height-tight);
+  --font-heading-1-letter-spacing: var(--font-letter-spacing-tight);
+  --font-heading-1: var(--font-heading-1-weight) var(--font-heading-1-size) /
+    var(--font-heading-1-line-height) var(--font-heading-1-family);
+
+  --font-heading-2-family: var(--font-family-sans);
+  --font-heading-2-size: var(--font-size-2xl);
+  --font-heading-2-weight: var(--font-weight-semibold);
+  --font-heading-2-line-height: var(--font-line-height-tight);
+  --font-heading-2-letter-spacing: var(--font-letter-spacing-tight);
+  --font-heading-2: var(--font-heading-2-weight) var(--font-heading-2-size) /
+    var(--font-heading-2-line-height) var(--font-heading-2-family);
+
+  --font-heading-3-family: var(--font-family-sans);
+  --font-heading-3-size: var(--font-size-xl);
+  --font-heading-3-weight: var(--font-weight-semibold);
+  --font-heading-3-line-height: var(--font-line-height-tight);
+  --font-heading-3-letter-spacing: var(--font-letter-spacing-normal);
+  --font-heading-3: var(--font-heading-3-weight) var(--font-heading-3-size) /
+    var(--font-heading-3-line-height) var(--font-heading-3-family);
+
+  --font-heading-4-family: var(--font-family-sans);
+  --font-heading-4-size: var(--font-size-lg);
+  --font-heading-4-weight: var(--font-weight-semibold);
+  --font-heading-4-line-height: var(--font-line-height-normal);
+  --font-heading-4-letter-spacing: var(--font-letter-spacing-normal);
+  --font-heading-4: var(--font-heading-4-weight) var(--font-heading-4-size) /
+    var(--font-heading-4-line-height) var(--font-heading-4-family);
+
+  /* Body — default UI/paragraph text. `body` (base, 16px) is the
+   * default; -lg/-sm are for density variance within the same role
+   * (e.g. a denser table row vs. a spacious empty-state message),
+   * not a different kind of text. */
+  --font-body-lg-family: var(--font-family-sans);
+  --font-body-lg-size: var(--font-size-lg);
+  --font-body-lg-weight: var(--font-weight-regular);
+  --font-body-lg-line-height: var(--font-line-height-normal);
+  --font-body-lg-letter-spacing: var(--font-letter-spacing-normal);
+  --font-body-lg: var(--font-body-lg-weight) var(--font-body-lg-size) /
+    var(--font-body-lg-line-height) var(--font-body-lg-family);
+
+  --font-body-family: var(--font-family-sans);
+  --font-body-size: var(--font-size-base);
+  --font-body-weight: var(--font-weight-regular);
+  --font-body-line-height: var(--font-line-height-normal);
+  --font-body-letter-spacing: var(--font-letter-spacing-normal);
+  --font-body: var(--font-body-weight) var(--font-body-size) / var(--font-body-line-height)
+    var(--font-body-family);
+
+  --font-body-sm-family: var(--font-family-sans);
+  --font-body-sm-size: var(--font-size-sm);
+  --font-body-sm-weight: var(--font-weight-regular);
+  --font-body-sm-line-height: var(--font-line-height-normal);
+  --font-body-sm-letter-spacing: var(--font-letter-spacing-normal);
+  --font-body-sm: var(--font-body-sm-weight) var(--font-body-sm-size) /
+    var(--font-body-sm-line-height) var(--font-body-sm-family);
+
+  /* Label — form labels, table column headers, button text: content
+   * that names a control rather than being read as prose, so it's
+   * medium-weight at body-sm/body sizes rather than its own scale. */
+  --font-label-family: var(--font-family-sans);
+  --font-label-size: var(--font-size-sm);
+  --font-label-weight: var(--font-weight-medium);
+  --font-label-line-height: var(--font-line-height-normal);
+  --font-label-letter-spacing: var(--font-letter-spacing-normal);
+  --font-label: var(--font-label-weight) var(--font-label-size) / var(--font-label-line-height)
+    var(--font-label-family);
+
+  --font-label-lg-family: var(--font-family-sans);
+  --font-label-lg-size: var(--font-size-base);
+  --font-label-lg-weight: var(--font-weight-medium);
+  --font-label-lg-line-height: var(--font-line-height-normal);
+  --font-label-lg-letter-spacing: var(--font-letter-spacing-normal);
+  --font-label-lg: var(--font-label-lg-weight) var(--font-label-lg-size) /
+    var(--font-label-lg-line-height) var(--font-label-lg-family);
+
+  /* Caption — helper text, metadata, timestamps: the smallest, most
+   * secondary role. Slightly wider tracking is a deliberate legibility
+   * compensation for running text this small, not decoration. */
+  --font-caption-family: var(--font-family-sans);
+  --font-caption-size: var(--font-size-xs);
+  --font-caption-weight: var(--font-weight-regular);
+  --font-caption-line-height: var(--font-line-height-normal);
+  --font-caption-letter-spacing: var(--font-letter-spacing-wide);
+  --font-caption: var(--font-caption-weight) var(--font-caption-size) /
+    var(--font-caption-line-height) var(--font-caption-family);
+
+  /* Data — numeric results and table cells. Sans, not mono: paired
+   * with `font-variant-numeric: tabular-nums` for digit alignment
+   * instead of switching typeface. This is the default choice for
+   * "a number in the UI" — use `code`/`code-lg` only when character
+   * width must be uniform beyond digits (see file header). */
+  --font-data-family: var(--font-family-sans);
+  --font-data-size: var(--font-size-sm);
+  --font-data-weight: var(--font-weight-regular);
+  --font-data-line-height: var(--font-line-height-normal);
+  --font-data-letter-spacing: var(--font-letter-spacing-normal);
+  --font-data-numeric-variant: tabular-nums;
+  --font-data: var(--font-data-weight) var(--font-data-size) / var(--font-data-line-height)
+    var(--font-data-family);
+
+  /* Code — literal code, and raw sequence/identifier data (DNA/protein
+   * sequences, hashes, IDs) where fixed-width alignment is structural.
+   * font-mono, not font-sans. */
+  --font-code-family: var(--font-family-mono);
+  --font-code-size: var(--font-size-sm);
+  --font-code-weight: var(--font-weight-regular);
+  --font-code-line-height: var(--font-line-height-normal);
+  --font-code-letter-spacing: var(--font-letter-spacing-normal);
+  --font-code: var(--font-code-weight) var(--font-code-size) / var(--font-code-line-height)
+    var(--font-code-family);
+
+  --font-code-lg-family: var(--font-family-mono);
+  --font-code-lg-size: var(--font-size-base);
+  --font-code-lg-weight: var(--font-weight-regular);
+  --font-code-lg-line-height: var(--font-line-height-normal);
+  --font-code-lg-letter-spacing: var(--font-letter-spacing-normal);
+  --font-code-lg: var(--font-code-lg-weight) var(--font-code-lg-size) /
+    var(--font-code-lg-line-height) var(--font-code-lg-family);
+}

@@ -1,0 +1,46 @@
+{
+  "milestone": "after-o1-active-row-lookup",
+  "date": "2026-08-21",
+  "commits": ["6a520e3"],
+  "dataTable": {
+    "1k": {
+      "renderMs": 638,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 85,
+      "keyboardNavP50Ms": 23.5,
+      "keyboardNavP95Ms": 38
+    },
+    "10k": {
+      "renderMs": 917,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 96,
+      "keyboardNavP50Ms": 24,
+      "keyboardNavP95Ms": 47
+    },
+    "100k": {
+      "renderMs": 4842,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 197,
+      "keyboardNavP50Ms": 30.5,
+      "keyboardNavP95Ms": 49
+    }
+  },
+  "bundle": {
+    "scaffoldReactGzipKb": 57.19,
+    "budgetKb": 70
+  },
+  "themeSwap": {
+    "p95Under16ms": true
+  },
+  "notes": [
+    "Compares against after-compiler (2026-08-21), the previous milestone -- that milestone's 100k keyNavP95 (139ms), a clear outlier against 1k/10k's 40/46ms, was flagged as unexplained noise at the time.",
+    "Root cause found by re-reading the compiled code: DataTableBody computed `table.rows.findIndex(row => row.id === nav.activeCell.rowId)` on every render to find the keyboard-active row for withActiveRow -- an O(n) scan that reruns on every arrow-key press (DataTableBody re-renders whenever nav.activeCell changes). DataTableRoot already builds an O(1) rowIndexById Map for its own keyboard nav, but it wasn't exposed to DataTableBody via context, so this consumer had no way to avoid the scan.",
+    "A second, lower-traffic instance of the same gap: DataTableCellEditor.moveActiveCell rebuilt rowIds/columnIds arrays with `.map()` and called computeNextActiveCell without the id->index maps, falling back to indexOf() -- O(n) on every Enter/Tab commit while editing a cell, not just every keypress.",
+    "Fix: DataTableContextValue now carries the same rowIds/columnIds/rowIndexById/columnIndexById DataTableRoot already computes with useMemo, so DataTableBody and DataTableCellEditor read the shared O(1) maps and memoized arrays instead of rebuilding or scanning.",
+    "keyboardNavP95 @ 100k: 139ms -> 49ms (first run) / 86ms (repeat run) -- both well below the prior milestone's 139ms and back in the same range as 1k/10k, confirming the findIndex scan was the actual cause. Ran twice given 100k's known run-to-run variance; both runs support the fix.",
+    "editCommitMs @ 100k also improved slightly (218ms -> 197ms/218ms across the two runs) -- moveActiveCell runs once per Enter/Tab during editCommitMs's own measurement window.",
+    "renderMs is flat to slightly noisier (4279ms -> 4842ms/5840ms across runs) -- expected, since initial mount doesn't touch either fixed code path; within the same run-to-run variance already noted for 100k renderMs at every prior milestone.",
+    "scrollDeltaPx stayed 0 and all 126 visual regression tests still pass -- withActiveRow's semantics are unchanged: rowIndexById.get(id) ?? -1 returns the same -1-for-not-found behavior findIndex did.",
+    "Bundle: 57.18 -> 57.19 KB gzip, unchanged within rounding -- this was a lookup-strategy change, not new functionality."
+  ]
+}

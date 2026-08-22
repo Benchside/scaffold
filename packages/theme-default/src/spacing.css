@@ -1,0 +1,70 @@
+/**
+ * @benchside/scaffold-theme-default — semantic spacing tokens
+ *
+ * Same rationale as typography.css: spacing doesn't vary by theme, so
+ * this is a single theme-agnostic `:root` block. Every value chains to
+ * a `--size-*` primitive — never a raw px literal.
+ *
+ * Three roles, matching what a component actually needs to say, not
+ * CSS property names:
+ *   - inset  — padding *inside* a container (button, input, card, badge)
+ *   - stack  — vertical gap/margin *between* stacked elements (form
+ *              fields, list items, sections within a panel)
+ *   - inline — horizontal gap *between* inline elements (icon + label,
+ *              button groups, toolbar items)
+ * A component picks a role + size (e.g. `padding: var(--space-inset-md)`
+ * or `gap: var(--space-inline-sm)`) instead of reaching for a raw
+ * `--size-*` step and re-deciding "how much padding should a button
+ * have" at every call site.
+ *
+ * Scale runs 2xs -> 3xl per role (8/8/7 steps) rather than the
+ * original xs -> xl — widened after review so there's enough range for
+ * real component density variance without forcing components to fall
+ * back to raw `--size-*` primitives for anything slightly outside the
+ * original 4-step range.
+ *
+ * This is a *named-step* scale, not a fluid/viewport-responsive one:
+ * per-breakpoint layout differences (e.g. tighter padding on mobile)
+ * are expected to be handled at the Tailwind-utility/component level
+ * (responsive variants like `md:p-4`) reaching into the primitive
+ * `--size-*` scale directly, which already has 45+ steps for that kind
+ * of fine-grained, breakpoint-specific control — not by making these
+ * semantic role tokens themselves viewport-dependent.
+ *
+ * Deliberately NOT included: page/layout-level tokens (gutters, page
+ * margins). Scaffold provides primitives and components, not opinionated
+ * page layout — layout composition stays the consuming tool's decision,
+ * so a `--space-layout-*` role would be scope creep past what these
+ * three component-level roles cover.
+ */
+
+:root {
+  /* Inset — padding inside a container. */
+  --space-inset-2xs: var(--size-2);
+  --space-inset-xs: var(--size-4);
+  --space-inset-sm: var(--size-8);
+  --space-inset-md: var(--size-12);
+  --space-inset-lg: var(--size-16);
+  --space-inset-xl: var(--size-24);
+  --space-inset-2xl: var(--size-32);
+  --space-inset-3xl: var(--size-48);
+
+  /* Stack — vertical gap/margin between stacked elements. */
+  --space-stack-2xs: var(--size-2);
+  --space-stack-xs: var(--size-4);
+  --space-stack-sm: var(--size-8);
+  --space-stack-md: var(--size-16);
+  --space-stack-lg: var(--size-24);
+  --space-stack-xl: var(--size-32);
+  --space-stack-2xl: var(--size-48);
+  --space-stack-3xl: var(--size-64);
+
+  /* Inline — horizontal gap between inline elements. */
+  --space-inline-2xs: var(--size-2);
+  --space-inline-xs: var(--size-4);
+  --space-inline-sm: var(--size-8);
+  --space-inline-md: var(--size-12);
+  --space-inline-lg: var(--size-16);
+  --space-inline-xl: var(--size-24);
+  --space-inline-2xl: var(--size-32);
+}

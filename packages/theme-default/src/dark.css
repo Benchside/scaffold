@@ -1,0 +1,173 @@
+/**
+ * @benchside/scaffold-theme-default — dark mode semantic mapping
+ *
+ * Methodology: pure index-mirroring around the 11-step primitive scale
+ * (50<->950, 100<->900, 200<->800, 300<->700, 400<->600, 500
+ * self-mirrors) applied to every light.css declaration that points at
+ * a primitive step. This only produces a coherent, contrast-correct
+ * result because every family used anywhere in the semantic layer
+ * — including green/sky, added specifically for this reason — now
+ * shares one canonical lightness curve (0.4.1 retuning, see
+ * packages/tokens/src/scripts/retune-primitives.ts).
+ *
+ * Deliberate departures from pure mirroring, each decided explicitly
+ * rather than falling out of the algorithm:
+ *
+ * 1. bg-inverse / text-inverse ARE mirrored here, reversing an earlier
+ *    "macOS style" decision to fix them at cool-gray-950/cool-gray-50 in
+ *    both themes. That decision assumed the page around bg-inverse
+ *    always stays light (a dark tooltip popping against a light page) —
+ *    true in light mode, but in dark mode bg-base is *also*
+ *    cool-gray-950, so the fixed value became indistinguishable from
+ *    the page it's meant to always contrast with. Mirroring restores
+ *    that "always contrasts" contract: cool-gray-950-on-light becomes
+ *    cool-gray-50-on-dark, and vice versa for text-inverse.
+ * 2. bg-overlay is fixed at cool-gray-950 rather than mirrored to
+ *    cool-gray-50. A modal/dialog scrim is meant to darken whatever is
+ *    behind it in both themes — an inverted (near-white) scrim over a
+ *    dark UI would look like a flashbang, not a backdrop. Redeclared
+ *    below (light.css's copy lives under the light-only selector, not
+ *    the always-on `:root`) with the same value rather than a mirrored
+ *    one.
+ * 3. Several tokens that would mirror into the 900-950 range instead
+ *    stop at 800 (or, for border-default, 700). Measured, not a
+ *    hunch: at the very bottom of the primitive scale, OKLCH's sRGB
+ *    gamut pinches (chroma collapses toward 0 as L->0) on top of
+ *    human contrast sensitivity dropping in low luminance, so
+ *    adjacent dark steps compress far more than the same index-gap
+ *    does in the middle of the scale — verified against both our own
+ *    cool-gray curve AND stock Tailwind's gray/zinc/slate/neutral/
+ *    stone (900<->950 sits at ~1.05-1.13:1 contrast across all of
+ *    them, ours included; nobody's dark end escapes this by tuning
+ *    the curve differently). The worst case measured directly: every
+ *    status-*-bg token mirrored to 950 sat at ~1.00-1.002:1 contrast
+ *    against bg-base — a themed status background that's
+ *    indistinguishable from the page background, not just "hard to
+ *    tell apart." Tailwind's own dark-mode guidance doesn't fix this
+ *    by re-curving the palette either — it just never places adjacent
+ *    steps next to each other at that end (page bg-900, card bg-800,
+ *    never 900 next to 950). This file does the same: bg-subtle,
+ *    bg-elevated, status-neutral-bg, and every status-*-bg step back
+ *    to 800 (chroma ~0.05-0.10 there vs ~0.02-0.04 at 900/950 — the
+ *    visible "this is tinted" signal matters more than the marginal
+ *    L gain); bg-hover and border-default step back to 700, matching
+ *    light.css's own precedent of border-default sharing bg-hover's
+ *    exact step. accent-subtle gets the identical fix for the
+ *    identical reason (a near-black "subtle" accent fill is just as
+ *    invisible as a near-black status fill).
+ * 4. bg-elevated deliberately breaks from light.css's "==bg-base"
+ *    compromise (chosen there only because cool-gray-50 has no lighter
+ *    step to promote to). Dark mode has real room to differentiate, so
+ *    elevated surfaces get an actual lift off the base instead of a
+ *    mirrored copy of that compromise — it lands on the same step as
+ *    bg-subtle (cool-gray-800, see point 3), which isn't a new
+ *    problem: light.css already reuses one primitive across two
+ *    semantic roles (bg-hover and border-default both cool-gray-200),
+ *    since sharing a step is fine when the tokens serve different
+ *    structural purposes.
+ *
+ * `border-focus` and `accent-text` (chained to accent-default /
+ * accent-hover in light.css) are likewise not redeclared: CSS custom
+ * properties resolve live, so once accent-default/accent-hover are
+ * overridden below, anything chained to them updates automatically —
+ * this is the same mechanism that lets per-tool theme packages
+ * override just the four accent-* variables and have focus rings and
+ * link color follow without this package or theirs needing to know
+ * about each other.
+ *
+ * Two selectors, matching light.css's specificity reasoning: the
+ * `@media (prefers-color-scheme: dark)` block is the OS-preference
+ * fallback (only applies with no explicit `data-theme` attribute);
+ * `:root[data-theme="dark"]` is the explicit opt-in, at (0,2,0) so it
+ * always beats the media-query fallback's bare `:root` (0,1,0)
+ * regardless of source/import order. (light.css's explicit
+ * `:root[data-theme="light"]` can never match at the same time —
+ * `data-theme` can't equal both "light" and "dark" on one element —
+ * so there's no tie to break against that selector specifically.)
+ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surface */
+    --color-bg-base: var(--color-cool-gray-950);
+    --color-bg-subtle: var(--color-cool-gray-800);
+    --color-bg-hover: var(--color-cool-gray-700);
+    --color-bg-elevated: var(--color-cool-gray-800);
+    --color-bg-overlay: var(--color-cool-gray-950);
+    --color-bg-inverse: var(--color-cool-gray-50);
+
+    /* Text */
+    --color-text-primary: var(--color-cool-gray-50);
+    --color-text-secondary: var(--color-cool-gray-400);
+    --color-text-placeholder: var(--color-cool-gray-600);
+    --color-text-disabled: var(--color-cool-gray-700);
+    --color-text-inverse: var(--color-cool-gray-950);
+
+    /* Border */
+    --color-border-default: var(--color-cool-gray-700);
+    --color-border-strong: var(--color-cool-gray-600);
+    --color-border-error: var(--color-red-500);
+
+    /* Accent */
+    --color-accent-default: var(--color-blue-500);
+    --color-accent-hover: var(--color-blue-400);
+    --color-accent-active: var(--color-blue-300);
+    --color-accent-subtle: var(--color-blue-800);
+
+    /* Status */
+    --color-status-success: var(--color-green-400);
+    --color-status-success-bg: var(--color-green-800);
+    --color-status-warning: var(--color-amber-300);
+    --color-status-warning-bg: var(--color-amber-800);
+    --color-status-error: var(--color-red-400);
+    --color-status-error-hover: var(--color-red-300);
+    --color-status-error-active: var(--color-red-200);
+    --color-status-error-bg: var(--color-red-800);
+    --color-status-info: var(--color-sky-400);
+    --color-status-info-bg: var(--color-sky-800);
+    --color-status-neutral: var(--color-cool-gray-400);
+    --color-status-neutral-bg: var(--color-cool-gray-800);
+  }
+}
+
+:root[data-theme="dark"] {
+  /* Surface */
+  --color-bg-base: var(--color-cool-gray-950);
+  --color-bg-subtle: var(--color-cool-gray-800);
+  --color-bg-hover: var(--color-cool-gray-700);
+  --color-bg-elevated: var(--color-cool-gray-800);
+  --color-bg-overlay: var(--color-cool-gray-950);
+  --color-bg-inverse: var(--color-cool-gray-50);
+
+  /* Text */
+  --color-text-primary: var(--color-cool-gray-50);
+  --color-text-secondary: var(--color-cool-gray-400);
+  --color-text-placeholder: var(--color-cool-gray-600);
+  --color-text-disabled: var(--color-cool-gray-700);
+  --color-text-inverse: var(--color-cool-gray-950);
+
+  /* Border */
+  --color-border-default: var(--color-cool-gray-700);
+  --color-border-strong: var(--color-cool-gray-600);
+  --color-border-error: var(--color-red-500);
+
+  /* Accent */
+  --color-accent-default: var(--color-blue-500);
+  --color-accent-hover: var(--color-blue-400);
+  --color-accent-active: var(--color-blue-300);
+  --color-accent-subtle: var(--color-blue-800);
+
+  /* Status */
+  --color-status-success: var(--color-green-400);
+  --color-status-success-bg: var(--color-green-800);
+  --color-status-warning: var(--color-amber-300);
+  --color-status-warning-bg: var(--color-amber-800);
+  --color-status-error: var(--color-red-400);
+  --color-status-error-hover: var(--color-red-300);
+  --color-status-error-active: var(--color-red-200);
+  --color-status-error-bg: var(--color-red-800);
+  --color-status-info: var(--color-sky-400);
+  --color-status-info-bg: var(--color-sky-800);
+  --color-status-neutral: var(--color-cool-gray-400);
+  --color-status-neutral-bg: var(--color-cool-gray-800);
+}

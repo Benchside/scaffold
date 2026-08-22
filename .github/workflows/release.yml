@@ -1,0 +1,59 @@
+name: Release
+
+# Only ever opens/updates the "Version Packages" PR — never publishes.
+# Safe to run unattended on every push to main since it never touches
+# npm. See publish.yml for the actual publish step, gated behind a
+# required-reviewer approval on the npm-publish environment.
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  version:
+    name: Open or update the Version Packages PR
+    runs-on: ubuntu-latest
+    # changesets/action commits its version-bump changes internally
+    # (e.g. "Version Packages (beta)") — a message with no
+    # type(scope): subject prefix, which our own commitlint hook (via
+    # lefthook, installed by `pnpm install`'s prepare script) would
+    # otherwise reject. LEFTHOOK=0 exempts this job's git operations
+    # from local hooks; ci.yml already re-validates everything this
+    # commit touches on its own next run, so nothing is actually skipped.
+    env:
+      LEFTHOOK: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm" # caches the pnpm store, keyed on pnpm-lock.yaml — speeds up `pnpm install` on unchanged lockfiles
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # No `publish` input on purpose — this step only ever creates or
+      # updates the Version Packages PR from pending .changeset/*.md
+      # files. It never runs a publish command, so it needs no npm
+      # credentials and can't touch the registry.
+      - name: Version packages
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

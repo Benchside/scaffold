@@ -1,0 +1,41 @@
+{
+  "milestone": "after-manual-fixes",
+  "date": "2026-08-20",
+  "commits": ["bfdc967", "a32b1b5"],
+  "dataTable": {
+    "1k": {
+      "renderMs": 655,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 99,
+      "keyboardNavP50Ms": 54.5,
+      "keyboardNavP95Ms": 97
+    },
+    "10k": {
+      "renderMs": 1108,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 93,
+      "keyboardNavP50Ms": 56.5,
+      "keyboardNavP95Ms": 135
+    },
+    "100k": {
+      "renderMs": 6245,
+      "scrollDeltaPx": 0,
+      "editCommitMs": 286,
+      "keyboardNavP50Ms": 55,
+      "keyboardNavP95Ms": 136
+    }
+  },
+  "bundle": {
+    "scaffoldReactGzipKb": 41.54,
+    "budgetKb": 50
+  },
+  "themeSwap": {
+    "p95Under16ms": true
+  },
+  "notes": [
+    "scrollDeltaPx is 0 at every row count -- the scroll-jump bug is fixed.",
+    "editCommitMs dropped from baseline's 138/493/5716ms to 99/93/286ms -- roughly flat instead of scaling linearly with row count, after two fixes: decoupling selected/edited from row identity so only touched rows rebuild, and fixing baseRows/headerCells to stop depending on tanstack's table wrapper (which changed reference every render regardless of what changed, defeating memoization entirely).",
+    "renderMs is largely unchanged (initial mount is still an unavoidable one-time O(n) build, as noted at baseline) -- 100k's renderMs varies run to run (5-8s) more than the other metrics; not something these two fixes targeted.",
+    "keyboardNavP50/P95 still don't show a clear row-count trend, for the same reason noted at baseline: Playwright/CDP round-trip overhead per keypress dominates at this scale."
+  ]
+}

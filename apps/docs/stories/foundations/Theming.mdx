@@ -1,0 +1,100 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundations/Theming" />
+
+# Theming
+
+Scaffold's visual system is three layers, each a separate package, each
+consumed by the one after it:
+
+```
+Primitive tokens  →  Semantic tokens  →  Tailwind utility classes
+@benchside/            @benchside/          @benchside/
+scaffold-tokens         theme-default        scaffold-tailwind
+```
+
+**Primitive tokens** are raw values — oklch colors, spacing units,
+radii, type scales — with no meaning attached. Components never
+reference these directly.
+
+**Semantic tokens** map primitives to purpose: `color.bg.base`,
+`color.text.primary`, `color.accent.default`. This is the layer every
+component actually reads, and the layer a theme override touches.
+
+**The Tailwind preset** republishes every semantic token as a utility
+class (`bg-accent`, `text-text-secondary`, `p-inset-md`) via Tailwind
+v4's `@theme inline` — which keeps them as live `var()` references at
+runtime instead of baking in a value at build time. That's what makes
+the next section possible.
+
+See **Foundations → Primitive Tokens** and **Semantic Tokens** for the
+actual palette and scales, rendered.
+
+## Two ways to consume this
+
+**Doesn't matter whether your own app uses Tailwind or not:**
+`@benchside/scaffold-react/style.css` (see Getting Started) is a
+self-contained build of all three layers above, scoped to exactly the
+utility classes the component set uses — one import, no Tailwind config
+on your side, and no conflict with a Tailwind setup you already have
+(it's already-compiled CSS, not something your build reprocesses). This
+covers the overwhelming majority of usage — if you're only using
+Scaffold's components, stop here.
+
+**Already use Tailwind, or writing your own custom markup** that should
+use the same vocabulary (`bg-accent`, `p-inset-md`, ...) — not just
+inside Scaffold's components? That vocabulary only exists where a
+Tailwind compiler has actually seen it: `style.css` was compiled once,
+at Scaffold's own build time, against Scaffold's own component source —
+it has no way to know about class names your own code writes later.
+Your own Tailwind build needs the same preset loaded so it can compile
+those classes itself. This builds directly on the install above — no
+need to separately import tokens or theme-default, `style.css` already
+provides the underlying variable values:
+
+```css
+@import "tailwindcss";
+@import "@benchside/scaffold-tailwind/css";
+@source "./src"; /* wherever your own components live */
+```
+
+Both can be true in the same app — most consumers only ever need the
+first.
+
+## Dark mode
+
+`@media (prefers-color-scheme: dark)` sets the default; an explicit
+`[data-theme="dark"]` or `[data-theme="light"]` attribute on `<html>`
+overrides it either direction. No JavaScript is involved — the swap is
+pure CSS custom-property re-resolution, verified to complete within one
+frame (< 16ms).
+
+## Per-tool accent theming
+
+Every Benchside tool shares the same foundation but keeps its own
+identity through one thing: its accent color. A per-tool theme package
+only ever needs to override four variables — everything downstream
+(hover states, focus rings, links, `accent-subtle` backgrounds) follows
+automatically, because those are themselves defined as chains into this
+same group, not independent primitives.
+
+```css
+[data-theme="benchside-calc"] {
+  --color-accent-default: var(--color-teal-500);
+  --color-accent-hover: var(--color-teal-600);
+  --color-accent-active: var(--color-teal-700);
+  --color-accent-subtle: var(--color-teal-50);
+}
+```
+
+No component code changes — the override is CSS-only, and every
+component that uses `bg-accent`/`text-accent`/`border-focus` picks it up
+automatically.
+
+| Tool | Accent |
+| --- | --- |
+| Default | Blue |
+| Benchside Calc | Teal |
+| Benchside Construct | Violet |
+| biolookup | Emerald |
+| LabGraph | Amber |

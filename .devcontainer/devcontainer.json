@@ -1,0 +1,30 @@
+{
+  "name": "benchside-scaffold (linux, CI-matching)",
+  // Same Playwright version pinned in every package.json (@playwright/test
+  // 1.56.0) — same Chromium build CI installs via `playwright install
+  // --with-deps chromium`, so screenshots taken in here match CI's
+  // *-linux.png baselines byte-for-byte (not just "close enough").
+  "image": "mcr.microsoft.com/playwright:v1.56.0-noble",
+  "workspaceFolder": "/work",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind,consistency=cached",
+  // pnpm's content-addressable store (.pnpm-store, defaults to the
+  // workspace root) and every node_modules in the workspace each get their
+  // own container-only named volume, layered on top of the bind mount
+  // above. Without this, `pnpm install` here would write Linux binaries
+  // (esbuild, lightningcss, ...) — and hundreds of MB of store content —
+  // straight into the *host* repo via the bind mount, breaking Mac
+  // node_modules for normal (non-container) development and bloating the
+  // working tree.
+  "mounts": [
+    "source=scaffold-pnpm-store,target=/work/.pnpm-store,type=volume",
+    "source=scaffold-node_modules-root,target=/work/node_modules,type=volume",
+    "source=scaffold-node_modules-docs,target=/work/apps/docs/node_modules,type=volume",
+    "source=scaffold-node_modules-tokens,target=/work/packages/tokens/node_modules,type=volume",
+    "source=scaffold-node_modules-theme-default,target=/work/packages/theme-default/node_modules,type=volume",
+    "source=scaffold-node_modules-tailwind-preset,target=/work/packages/tailwind-preset/node_modules,type=volume",
+    "source=scaffold-node_modules-react,target=/work/packages/react/node_modules,type=volume",
+    "source=scaffold-node_modules-solid,target=/work/packages/solid/node_modules,type=volume",
+    "source=scaffold-node_modules-vue,target=/work/packages/vue/node_modules,type=volume"
+  ],
+  "postCreateCommand": "corepack enable && pnpm install --frozen-lockfile"
+}

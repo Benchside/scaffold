@@ -1,0 +1,9 @@
+/* Fixture — same import chain as entry.css, but scoped to just the
+ * classes the runtime swap test renders. */
+@import "tailwindcss";
+@import "../../../../tokens/dist/tokens.css";
+@import "../../../../theme-default/src/light.css";
+@import "../../../../theme-default/src/dark.css";
+@import "../../index.css";
+
+@source inline("bg-accent bg-bg");

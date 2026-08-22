@@ -1,0 +1,62 @@
+name: Publish
+
+# Fires only when the Version Packages PR (opened by release.yml, always
+# branched from `changeset-release/main`) is merged into main — never on
+# any other PR, so the approval gate below doesn't fire on unrelated
+# merges. The `npm-publish` environment must have required reviewers
+# configured (Settings → Environments) for that gate to actually pause
+# the job; without it, this runs unattended the moment the condition
+# below is met.
+#
+# Publishes via npm Trusted Publishing (OIDC) — no NPM_TOKEN secret at
+# all. Each of the 4 publishable packages needs a trusted publisher
+# configured on npmjs.com (per-package, not org-wide) pointing at this
+# exact repo + `publish.yml` + the `npm-publish` environment name.
+# `id-token: write` below is what lets npm's CLI mint a short-lived
+# credential from this job's OIDC identity instead of reading a stored
+# secret.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+concurrency:
+  group: publish-${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # changeset publish pushes a git tag per published package
+  id-token: write # required for npm Trusted Publishing (OIDC) — mints the publish credential
+
+jobs:
+  publish:
+    name: Build and publish to npm
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'changeset-release/')
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Trusted Publishing needs npm CLI >= 11.5.1 — pin explicitly
+      # rather than trust whatever happens to ship bundled with the
+      # Node version in .nvmrc.
+      - name: Ensure npm CLI supports Trusted Publishing
+        run: npm install -g npm@^11.5.1
+
+      - name: Build and publish to npm
+        run: pnpm release

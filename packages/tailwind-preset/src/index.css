@@ -1,0 +1,256 @@
+/**
+ * @benchside/scaffold-tailwind — Tailwind v4 preset
+ *
+ * Pure CSS `@theme inline` mapping. Every declaration here is a
+ * `var(--...)` reference into a semantic token already declared by
+ * `@benchside/scaffold-theme-default` (color, spacing, typography) or a
+ * primitive already declared by `@benchside/scaffold-tokens` (radius,
+ * font family) — this file adds no new values of its own, it only
+ * republishes existing tokens under the theme keys Tailwind's utility
+ * generator recognizes. `inline` (not a bare `@theme`) is required so
+ * these stay live `var()` references at runtime instead of getting
+ * inlined to their resolved value at build time — that's what makes
+ * `[data-theme]` swaps work without a rebuild.
+ *
+ * Consumer import order matters: tokens -> theme-default ->
+ * tailwind-preset. This file
+ * assumes every `--color-*`, `--space-*`, `--font-*` variable it
+ * references already exists in scope.
+ *
+ * Typography is a special case. theme-default's typography.css defines
+ * *composite* tokens (`--font-heading-1` bundles family+size+weight+
+ * line-height+letter-spacing as one CSS `font` shorthand value) because
+ * that's what a design role actually means. Tailwind v4 has no
+ * matching composite theme key — its typography-related namespaces are
+ * atomic: `--font-*` (family only), `--text-*` (size, optionally paired
+ * with a `--text-*--line-height` sibling), `--font-weight-*`,
+ * `--tracking-*` (letter-spacing). So each composite role is
+ * decomposed into up to four Tailwind keys below (`--text-heading-1`,
+ * `--text-heading-1--line-height`, `--font-weight-heading-1`,
+ * `--tracking-heading-1`), generating four independent utility classes
+ * a consumer combines (`text-heading-1 font-heading-1
+ * tracking-heading-1`) rather than one class that does everything.
+ * Composing that combination back into a single API is a
+ * component-layer concern (a `Heading`/`Text` component), not this
+ * preset's — the preset's job stops at "every token is one Tailwind
+ * utility away".
+ *
+ * Font *family* is deliberately NOT decomposed per-role: every role
+ * uses either `--font-family-sans` or `--font-family-mono` (never a
+ * third family), and both are already exposed once each below
+ * (`--font-sans`, `--font-mono`) — a role-specific family key would
+ * just be a redundant alias for one of those two.
+ */
+
+@theme inline {
+  /* Color — Surface */
+  --color-bg: var(--color-bg-base);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-bg-hover: var(--color-bg-hover);
+  --color-bg-elevated: var(--color-bg-elevated);
+  --color-bg-overlay: var(--color-bg-overlay);
+  --color-bg-inverse: var(--color-bg-inverse);
+
+  /* Color — Text */
+  --color-text: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-placeholder: var(--color-text-placeholder);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-text-inverse: var(--color-text-inverse);
+  --color-text-on-solid: var(--color-text-on-solid);
+
+  /* Color — Border */
+  --color-border: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+  --color-border-error: var(--color-border-error);
+  --color-border-focus: var(--color-border-focus);
+
+  /* Color — Accent */
+  --color-accent: var(--color-accent-default);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-active: var(--color-accent-active);
+  --color-accent-subtle: var(--color-accent-subtle);
+  --color-accent-text: var(--color-accent-text);
+
+  /* Color — Status */
+  --color-status-success: var(--color-status-success);
+  --color-status-success-bg: var(--color-status-success-bg);
+  --color-status-warning: var(--color-status-warning);
+  --color-status-warning-bg: var(--color-status-warning-bg);
+  --color-status-error: var(--color-status-error);
+  --color-status-error-hover: var(--color-status-error-hover);
+  --color-status-error-active: var(--color-status-error-active);
+  --color-status-error-bg: var(--color-status-error-bg);
+  --color-status-info: var(--color-status-info);
+  --color-status-info-bg: var(--color-status-info-bg);
+  --color-status-neutral: var(--color-status-neutral);
+  --color-status-neutral-bg: var(--color-status-neutral-bg);
+
+  /* Radius — primitives are already named to match Tailwind's own
+   * `--radius-*` namespace, so this is an identity passthrough. */
+  --radius-none: var(--radius-none);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
+
+  /* Font family */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+
+  /* Spacing — role-based (inset/stack/inline), not a numbered linear
+   * scale. Tailwind v4's `--spacing-*` namespace accepts arbitrary
+   * keys (not just numbers), so `--spacing-inset-md` generates
+   * `p-inset-md`, `gap-inline-sm`, `w-stack-lg`, etc. exactly like a
+   * numbered key would. */
+  --spacing-inset-2xs: var(--space-inset-2xs);
+  --spacing-inset-xs: var(--space-inset-xs);
+  --spacing-inset-sm: var(--space-inset-sm);
+  --spacing-inset-md: var(--space-inset-md);
+  --spacing-inset-lg: var(--space-inset-lg);
+  --spacing-inset-xl: var(--space-inset-xl);
+  --spacing-inset-2xl: var(--space-inset-2xl);
+  --spacing-inset-3xl: var(--space-inset-3xl);
+
+  --spacing-stack-2xs: var(--space-stack-2xs);
+  --spacing-stack-xs: var(--space-stack-xs);
+  --spacing-stack-sm: var(--space-stack-sm);
+  --spacing-stack-md: var(--space-stack-md);
+  --spacing-stack-lg: var(--space-stack-lg);
+  --spacing-stack-xl: var(--space-stack-xl);
+  --spacing-stack-2xl: var(--space-stack-2xl);
+  --spacing-stack-3xl: var(--space-stack-3xl);
+
+  --spacing-inline-2xs: var(--space-inline-2xs);
+  --spacing-inline-xs: var(--space-inline-xs);
+  --spacing-inline-sm: var(--space-inline-sm);
+  --spacing-inline-md: var(--space-inline-md);
+  --spacing-inline-lg: var(--space-inline-lg);
+  --spacing-inline-xl: var(--space-inline-xl);
+  --spacing-inline-2xl: var(--space-inline-2xl);
+
+  /* Typography — decomposed per role, see file header. */
+  --text-heading-1: var(--font-heading-1-size);
+  --text-heading-1--line-height: var(--font-heading-1-line-height);
+  --font-weight-heading-1: var(--font-heading-1-weight);
+  --tracking-heading-1: var(--font-heading-1-letter-spacing);
+
+  --text-heading-2: var(--font-heading-2-size);
+  --text-heading-2--line-height: var(--font-heading-2-line-height);
+  --font-weight-heading-2: var(--font-heading-2-weight);
+  --tracking-heading-2: var(--font-heading-2-letter-spacing);
+
+  --text-heading-3: var(--font-heading-3-size);
+  --text-heading-3--line-height: var(--font-heading-3-line-height);
+  --font-weight-heading-3: var(--font-heading-3-weight);
+  --tracking-heading-3: var(--font-heading-3-letter-spacing);
+
+  --text-heading-4: var(--font-heading-4-size);
+  --text-heading-4--line-height: var(--font-heading-4-line-height);
+  --font-weight-heading-4: var(--font-heading-4-weight);
+  --tracking-heading-4: var(--font-heading-4-letter-spacing);
+
+  --text-body-lg: var(--font-body-lg-size);
+  --text-body-lg--line-height: var(--font-body-lg-line-height);
+  --font-weight-body-lg: var(--font-body-lg-weight);
+  --tracking-body-lg: var(--font-body-lg-letter-spacing);
+
+  --text-body: var(--font-body-size);
+  --text-body--line-height: var(--font-body-line-height);
+  --font-weight-body: var(--font-body-weight);
+  --tracking-body: var(--font-body-letter-spacing);
+
+  --text-body-sm: var(--font-body-sm-size);
+  --text-body-sm--line-height: var(--font-body-sm-line-height);
+  --font-weight-body-sm: var(--font-body-sm-weight);
+  --tracking-body-sm: var(--font-body-sm-letter-spacing);
+
+  --text-label: var(--font-label-size);
+  --text-label--line-height: var(--font-label-line-height);
+  --font-weight-label: var(--font-label-weight);
+  --tracking-label: var(--font-label-letter-spacing);
+
+  --text-label-lg: var(--font-label-lg-size);
+  --text-label-lg--line-height: var(--font-label-lg-line-height);
+  --font-weight-label-lg: var(--font-label-lg-weight);
+  --tracking-label-lg: var(--font-label-lg-letter-spacing);
+
+  --text-caption: var(--font-caption-size);
+  --text-caption--line-height: var(--font-caption-line-height);
+  --font-weight-caption: var(--font-caption-weight);
+  --tracking-caption: var(--font-caption-letter-spacing);
+
+  --text-data: var(--font-data-size);
+  --text-data--line-height: var(--font-data-line-height);
+  --font-weight-data: var(--font-data-weight);
+  --tracking-data: var(--font-data-letter-spacing);
+
+  --text-code: var(--font-code-size);
+  --text-code--line-height: var(--font-code-line-height);
+  --font-weight-code: var(--font-code-weight);
+  --tracking-code: var(--font-code-letter-spacing);
+
+  --text-code-lg: var(--font-code-lg-size);
+  --text-code-lg--line-height: var(--font-code-lg-line-height);
+  --font-weight-code-lg: var(--font-code-lg-weight);
+  --tracking-code-lg: var(--font-code-lg-letter-spacing);
+
+  /* Enter/exit animation — shared by every overlay component (Dialog,
+   * Menu, Select; Tooltip/Toast to follow). `animation` (keyframes), not
+   * `transition`: a `transition` only interpolates from an element's
+   * *previous* rendered value, so it silently no-ops the instant an
+   * overlay's `hidden` attribute (`display:none`) and open/closed
+   * `data-state` flip together in the same commit — there's no "previous
+   * frame" to animate from. Ark UI's presence layer also only defers
+   * unmounting for a real `animation-name` (checked via
+   * `getComputedStyle`), not a `transition` — so this is also what makes
+   * the exit animation finish playing before the element leaves the DOM.
+   * `overlay-*` = opacity-only (Dialog's backdrop); `panel-*` = opacity +
+   * scale (the floating/centered content box itself). */
+  --animate-overlay-in: overlay-in 150ms ease-out;
+  --animate-overlay-out: overlay-out 150ms ease-in;
+  --animate-panel-in: panel-in 150ms ease-out;
+  --animate-panel-out: panel-out 150ms ease-in;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes panel-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

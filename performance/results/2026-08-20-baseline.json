@@ -1,0 +1,40 @@
+{
+  "milestone": "baseline",
+  "date": "2026-08-20",
+  "commit": "b07548e",
+  "dataTable": {
+    "1k": {
+      "renderMs": 778,
+      "scrollDeltaPx": 3000,
+      "editCommitMs": 138,
+      "keyboardNavP50Ms": 60,
+      "keyboardNavP95Ms": 79
+    },
+    "10k": {
+      "renderMs": 1360,
+      "scrollDeltaPx": 3000,
+      "editCommitMs": 493,
+      "keyboardNavP50Ms": 68,
+      "keyboardNavP95Ms": 78
+    },
+    "100k": {
+      "renderMs": 8262,
+      "scrollDeltaPx": 3000,
+      "editCommitMs": 5716,
+      "keyboardNavP50Ms": 66.5,
+      "keyboardNavP95Ms": 94
+    }
+  },
+  "bundle": {
+    "scaffoldReactGzipKb": 41.13,
+    "budgetKb": 50
+  },
+  "themeSwap": {
+    "p95Under16ms": true
+  },
+  "notes": [
+    "scrollDeltaPx of exactly 3000 at every row count is the scroll-jump bug: selecting a row while scrolled resets scroll to 0, reproduced by an intentionally-failing assertion (TDD-first, see build plan principle 1).",
+    "editCommitMs scales ~linearly with row count (138ms -> 493ms -> 5716ms), consistent with useDataTable.ts's `rows` memo rebuilding the entire row/cell array on every edit commit.",
+    "keyboardNavP50/P95 stay flat (60-94ms) across row counts and are dominated by Playwright/CDP round-trip overhead per keypress at this scale, not by the O(n) indexOf scans identified in useDataTableKeyboardNav.ts -- that fix is validated by code inspection, not this metric."
+  ]
+}

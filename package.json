@@ -1,0 +1,57 @@
+{
+  "name": "@benchside/scaffold",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared design, interaction, and data-presentation system for the Benchside ecosystem.",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:browser": "turbo run test:browser",
+    "lint": "oxlint . && node scripts/check-css-tokens.mjs",
+    "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
+    "typecheck": "turbo run typecheck",
+    "tokens:validate": "turbo run validate",
+    "tokens:docs": "turbo run docs",
+    "tokens:watch": "turbo run watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "lefthook install",
+    "snapshots:update": "pnpm -C packages/tokens build && pnpm -C packages/theme-default build && pnpm -C packages/tailwind-preset build && pnpm -C packages/react build && pnpm -C apps/docs exec playwright test --update-snapshots",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.1",
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
+    "@playwright/test": "1.56.0",
+    "@types/node": "^24.13.3",
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "^30.0.1",
+    "lefthook": "^2.1.10",
+    "lint-staged": "^17.3.0",
+    "oxlint": "^1.79.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "turbo": "^2.10.10",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "keywords": [
+    "design-system",
+    "monorepo",
+    "react",
+    "design-tokens",
+    "tailwindcss"
+  ],
+  "author": "Benchside",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchside/scaffold.git"
+  },
+  "homepage": "https://github.com/benchside/scaffold#readme",
+  "bugs": "https://github.com/benchside/scaffold/issues",
+  "packageManager": "pnpm@11.21.0"
+}

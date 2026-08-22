@@ -1,0 +1,69 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Get Started/Getting Started" />
+
+# Getting Started
+
+Benchside Scaffold is the shared design, interaction, and
+data-presentation system for the Benchside ecosystem — install it, wire
+up the CSS import chain, and render your first component in under five
+minutes.
+
+## Install
+
+```bash
+npm install @benchside/scaffold-react react react-dom
+```
+
+## Import the CSS — one file
+
+```css
+@import "@benchside/scaffold-react/style.css";
+```
+
+That's the whole setup. `style.css` is self-contained — it already
+bundles the resolved token/theme values and every utility class the
+component set uses, so there's no Tailwind config, no separate
+token/theme package installs, and no build step required on your side.
+This works the same whether or not your own app uses Tailwind — nothing
+here conflicts with a Tailwind setup you already have.
+
+Already use Tailwind, or want the same semantic token vocabulary
+(`bg-accent`, `p-inset-md`, ...) available in your **own** custom
+markup, not just Scaffold's components? See **Foundations → Theming** —
+that's an optional extra step, not required to render components.
+
+## Render a component
+
+```tsx
+import { Button } from "@benchside/scaffold-react";
+
+function App() {
+  return <Button>Hello, Scaffold</Button>;
+}
+```
+
+That's it — no theme provider, no context setup. Every component reads
+its styling straight from the CSS custom properties the import chain
+above put in scope.
+
+## Dark mode
+
+Set `data-theme="dark"` on `<html>` to force dark mode, `data-theme="light"`
+to force light, or omit the attribute entirely to follow the OS
+`prefers-color-scheme` setting automatically.
+
+```html
+<html data-theme="dark">
+```
+
+## Next steps
+
+- **Foundations → Theming** — how the token system works, and how a
+  per-tool theme overrides just the accent color.
+- **Foundations → Primitive Tokens** / **Semantic Tokens** — the actual
+  color, spacing, and typography scales, rendered.
+- **Foundations → Accessibility** — the keyboard and ARIA conventions
+  shared across every component.
+- **Components** — the full component gallery, each with a live props
+  table generated from its TypeScript types.

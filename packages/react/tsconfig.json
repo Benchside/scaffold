@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "composite": true,
+    // JS emission is `scripts/build-js.mjs` (oxc-transform-react), not tsc
+    // — this only produces .d.ts. Declared here, not just in
+    // tsconfig.build.json, because other packages' project references
+    // point at this file; if the two configs disagreed about what dist/
+    // actually contains, tsc -b's cross-package staleness tracking would
+    // consider the output built from the wrong config and re-demand a
+    // rebuild it can't get (TS6305).
+    "emitDeclarationOnly": true,
+    "types": ["@testing-library/jest-dom", "vitest-axe/extend-expect"]
+  },
+  "include": ["src"]
+}

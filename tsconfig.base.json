@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": false,
+    "noEmit": false,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "@benchside/scaffold-tokens": ["./packages/tokens/src/index.ts"],
+      "@benchside/scaffold-theme-default": ["./packages/theme-default/src/index.ts"],
+      "@benchside/scaffold-react": ["./packages/react/src/index.ts"],
+      "@benchside/scaffold-solid": ["./packages/solid/src/index.ts"],
+      "@benchside/scaffold-vue": ["./packages/vue/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

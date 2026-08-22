@@ -1,0 +1,62 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundations/Accessibility" />
+
+# Accessibility
+
+Every component in Scaffold targets WCAG 2.1 AA and is checked against
+axe-core on every story, in both light and dark mode — a story with any
+violation fails, it doesn't just warn. This page covers the interaction
+patterns shared *across* components; each component's own docs page
+covers its specific keyboard shortcuts and ARIA roles.
+
+## Keyboard conventions
+
+- **Tab** moves between components, never within one — a multi-part
+  control (a grid, a group of radio buttons) uses **Arrow keys** to move
+  within itself and manages its own roving `tabindex`, so Tab only ever
+  has to land once per control, not once per cell/option.
+- **Escape** closes anything transient (a popover, a dialog, an open
+  edit) without committing a change.
+- **Enter** activates the focused control, or — inside an editable
+  grid cell — commits an edit and moves to the next one.
+
+## Roving-tabindex grids (DataTable)
+
+`DataTable` behaves like a spreadsheet: one cell has `tabIndex={0}` at a
+time (the "active" cell), every other cell is `tabIndex={-1}`, and Arrow
+keys move which cell is active instead of moving real DOM focus through
+every cell in sequence. This is the same pattern applied to more
+complex composite widgets generally — it keeps Tab a single hop in and
+a single hop out of the whole grid, regardless of its size.
+
+## Focus-trap dialogs
+
+`Dialog` and `AlertDialog` trap Tab focus inside their content while
+open (built on Ark UI's dialog state machine), and return focus to
+whatever triggered them on close — whether that close came from
+Escape, a backdrop click, or an explicit close button.
+
+## Disabled-with-reason (`aria-describedby`)
+
+A disabled control that needs to explain *why* it's disabled exposes
+that reason via `aria-describedby`, not just a hover tooltip — a
+keyboard or screen-reader user who can't hover still gets the
+explanation, reachable the same way regardless of input method.
+
+## Live regions (Toast)
+
+`Toast` picks its ARIA role by severity, not uniformly: `role="status"`
+for informational/success toasts (announced politely, without
+interrupting), `role="alert"` for warning/error toasts (announced
+immediately). This matches how assistive technology is expected to
+prioritize each severity, rather than treating every toast the same.
+
+## Virtualized lists (Combobox)
+
+`Combobox`'s option list is virtualized for large datasets, but
+`aria-activedescendant` still tracks the highlighted option correctly
+even when it's scrolled out of the mounted DOM window — the highlighted
+option is unioned into the mounted set early, ahead of the scroll
+actually catching up, so a screen reader never announces a stale or
+missing selection.

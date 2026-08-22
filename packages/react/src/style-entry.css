@@ -1,0 +1,24 @@
+/* Build-time input only — not part of the TS/TSX source graph, not
+ * exported. Compiled by scripts/build-css.mjs into dist/style.css, a
+ * self-contained bundle (resolved token/theme variable definitions +
+ * every utility class this package's own components actually use). Same
+ * import chain and @source pattern already proven working in
+ * apps/docs/.storybook/preview.css.
+ */
+@import "tailwindcss";
+@import "@benchside/scaffold-tokens/css";
+@import "@benchside/scaffold-theme-default/light.css";
+@import "@benchside/scaffold-theme-default/dark.css";
+@import "@benchside/scaffold-theme-default/spacing.css";
+@import "@benchside/scaffold-theme-default/typography.css";
+@import "@benchside/scaffold-theme-default/fonts.css";
+@import "@benchside/scaffold-tailwind/css";
+
+@source "./";
+
+/* Matches apps/docs/.storybook/preview.css's baseline — no component sets
+ * its own root text/background color. */
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+}

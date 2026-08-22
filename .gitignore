@@ -1,0 +1,49 @@
+# Planning docs — internal, not published with the repo
+/docs/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+storybook-static/
+packages/tokens/docs/
+
+# Turborepo
+.turbo/
+
+# TypeScript incremental build info (project references)
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Playwright
+test-results/
+playwright-report/
+# Playwright visual-regression baselines generated on a non-Linux dev
+# machine — CI runs on ubuntu, and Playwright suffixes screenshot
+# filenames by OS, so a *-darwin.png can never match CI's *-linux.png.
+# Only commit *-linux.png baselines (generate them to match CI — see
+# CONTRIBUTING.md).
+**/*-snapshots/*-darwin.png
+**/*-snapshots/*-win32.png
+blob-report/
+
+# Generated at test time (packages/tailwind-preset theme-swap.browser.test.ts)
+packages/tailwind-preset/src/__tests__/fixtures/compiled-swap.css
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/

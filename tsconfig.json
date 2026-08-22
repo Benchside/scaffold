@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/tokens/tsconfig.build.json" },
+    { "path": "packages/theme-default" },
+    { "path": "packages/tailwind-preset" },
+    { "path": "packages/react" },
+    { "path": "packages/solid" },
+    { "path": "packages/vue" },
+    { "path": "apps/docs" }
+  ]
+}

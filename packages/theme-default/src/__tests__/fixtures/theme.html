@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Order deliberately puts light.css before dark.css, matching a
+         real consumer's likely import order, to exercise the
+         specificity fix documented in both files' headers — if dark
+         mode ever regressed to relying on source order instead of
+         :root[data-theme="dark"]'s higher specificity, swapping this
+         order would be one way that'd surface. -->
+    <link rel="stylesheet" href="../../../../tokens/dist/tokens.css" />
+    <link rel="stylesheet" href="../../light.css" />
+    <link rel="stylesheet" href="../../dark.css" />
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,18 @@
+# lefthook configuration
+# https://github.com/evilmartians/lefthook
+#
+# Setup: pnpm install
+# (lefthook is an npm devDependency; its postinstall registers the git hooks —
+#  no separate binary/toolchain install needed)
+
+pre-commit:
+  commands:
+    lint-staged:
+      run: pnpm exec lint-staged
+    typecheck:
+      run: pnpm typecheck
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}

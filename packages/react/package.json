@@ -1,0 +1,99 @@
+{
+  "name": "@benchside/scaffold-react",
+  "version": "0.0.1",
+  "description": "React components for @benchside/scaffold, the Benchside design system.",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build-js.mjs && node scripts/build-css.mjs && tsc -b tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "size": "size-limit",
+    "prepublishOnly": "node ../../scripts/copy-license.mjs"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "components",
+    "ui",
+    "accessibility"
+  ],
+  "author": "Benchside",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchside/scaffold.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/benchside/scaffold/tree/main/packages/react",
+  "bugs": "https://github.com/benchside/scaffold/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@benchside/scaffold-tailwind": "workspace:*",
+    "@benchside/scaffold-theme-default": "workspace:*",
+    "@benchside/scaffold-tokens": "workspace:*",
+    "@size-limit/preset-small-lib": "^13.0.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.4",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "axe-core": "^4.13.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "oxc-transform-react": "^0.145.0",
+    "postcss": "^8.5.26",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "size-limit": "^13.0.3",
+    "tailwindcss": "^4.3.3",
+    "vitest-axe": "^0.1.0"
+  },
+  "dependencies": {
+    "@ark-ui/react": "^5.38.1",
+    "@floating-ui/dom": "^1.7.6",
+    "@internationalized/date": "^3.12.2",
+    "@tanstack/react-table": "^9.1.2",
+    "@tanstack/react-virtual": "^3.14.9",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^1.31.0",
+    "tailwind-merge": "^3.6.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "size-limit": [
+    {
+      "name": "@benchside/scaffold-react (all components)",
+      "path": "dist/index.js",
+      "import": "*",
+      "limit": "70 KB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react-dom",
+        "@ark-ui/react",
+        "@internationalized/date",
+        "@tanstack/react-table",
+        "@tanstack/react-virtual"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+/* Test fixture — mirrors a real consumer's import order (tokens ->
+ * theme-default -> tailwind-preset), plus Tailwind itself first (as
+ * `@import "tailwindcss";` always must come first) and a
+ * `@source inline(...)` listing the exact utility classes the test
+ * asserts on, standing in for a real consumer's scanned markup. */
+@import "tailwindcss";
+@import "../../../../tokens/dist/tokens.css";
+@import "../../../../theme-default/src/light.css";
+@import "../../../../theme-default/src/dark.css";
+@import "../../../../theme-default/src/spacing.css";
+@import "../../../../theme-default/src/typography.css";
+@import "../../index.css";
+
+@source inline(
+  "{bg,text,border}-{bg,bg-subtle,text,text-secondary,accent,accent-subtle,status-error,status-error-bg} p-inset-md gap-inline-sm rounded-lg rounded-full text-heading-1 font-heading-1 tracking-heading-1 text-body font-mono"
+);

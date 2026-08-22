@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dark.css semantic mapping > captures the full resolved dark semantic -> primitive variable map 1`] = `
+{
+  "--color-accent-active": "oklch(0.79 0.115 250)",
+  "--color-accent-default": "oklch(0.545 0.19 250)",
+  "--color-accent-hover": "oklch(0.645 0.155 250)",
+  "--color-accent-subtle": "oklch(0.25 0.105 250)",
+  "--color-bg-base": "oklch(0.09 0.006 240)",
+  "--color-bg-elevated": "oklch(0.24 0.01 240)",
+  "--color-bg-hover": "oklch(0.34 0.01 240)",
+  "--color-bg-inverse": "oklch(0.98 0.006 240)",
+  "--color-bg-overlay": "oklch(0.09 0.006 240)",
+  "--color-bg-subtle": "oklch(0.24 0.01 240)",
+  "--color-border-default": "oklch(0.34 0.01 240)",
+  "--color-border-error": "oklch(0.57 0.2266 25.331)",
+  "--color-border-strong": "oklch(0.45 0.012 240)",
+  "--color-status-error": "oklch(0.7 0.1812 22.216)",
+  "--color-status-error-active": "oklch(0.9 0.051 18.334)",
+  "--color-status-error-bg": "oklch(0.24 0.0957 26.899)",
+  "--color-status-error-hover": "oklch(0.82 0.0988 19.571)",
+  "--color-status-info": "oklch(0.7 0.1365 232.661)",
+  "--color-status-info-bg": "oklch(0.24 0.0546 240.79)",
+  "--color-status-neutral": "oklch(0.7 0.012 240)",
+  "--color-status-neutral-bg": "oklch(0.24 0.01 240)",
+  "--color-status-success": "oklch(0.7 0.1759 151.711)",
+  "--color-status-success-bg": "oklch(0.24 0.0627 151.328)",
+  "--color-status-warning": "oklch(0.82 0.1641 91.605)",
+  "--color-status-warning-bg": "oklch(0.24 0.0658 46.201)",
+  "--color-text-disabled": "oklch(0.34 0.01 240)",
+  "--color-text-inverse": "oklch(0.09 0.006 240)",
+  "--color-text-placeholder": "oklch(0.45 0.012 240)",
+  "--color-text-primary": "oklch(0.98 0.006 240)",
+  "--color-text-secondary": "oklch(0.7 0.012 240)",
+}
+`;

@@ -1,0 +1,10 @@
+{
+  "color": {
+    "cool-gray": {
+      "50": {
+        "$value": { "colorSpace": "oklch", "components": [0.985, 0.006, 240] },
+        "$description": "Lightest neutral surface — page background."
+      }
+    }
+  }
+}

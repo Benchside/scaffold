@@ -1,0 +1,137 @@
+/**
+ * @benchside/scaffold-theme-default — light mode semantic mapping
+ *
+ * Every declaration is a `var(--color-...)` reference — most resolve
+ * directly to a primitive from @benchside/scaffold-tokens
+ * (`var(--color-<family>-<step>)`); a few (`border-focus`,
+ * `accent-text`) intentionally chain to another semantic token instead
+ * (see "Accent" section below for why). Either way there are no raw
+ * color literals, and everything bottoms out at a real primitive with
+ * no dangling reference — see `../__tests__/light.test.ts`.
+ *
+ * Selector covers both the implicit default (`:root`, used when no
+ * `data-theme` attribute is present at all) and the explicit opt-in
+ * (`:root[data-theme="light"]`, used to force light regardless of OS
+ * preference). Dark mode (`dark.css`) overrides these under
+ * `:root[data-theme="dark"]` and `@media (prefers-color-scheme: dark)`.
+ *
+ * The explicit variant is written `:root[data-theme="light"]`, not the
+ * bare `[data-theme="light"]`, purely for specificity: a bare attribute
+ * selector is (0,1,0), the exact same specificity as the bare `:root`
+ * used inside dark.css's `@media (prefers-color-scheme: dark) { :root
+ * {...} }` fallback block. Two selectors tied on specificity fall back
+ * to source order, which makes "explicit light + OS set to dark" a
+ * bug that depends on which CSS file's <link>/import happens to come
+ * last. `:root[data-theme="light"]` is (0,2,0) and always wins,
+ * regardless of import order. */
+
+:root,
+:root[data-theme="light"] {
+  /* Surface
+   * bg-elevated intentionally equals bg-base: at the lightest
+   * available neutral step (cool-gray-50) there is no lighter step to
+   * promote elevated surfaces to, so elevation is communicated via
+   * border-default / shadow rather than a fill difference.
+   */
+  --color-bg-base: var(--color-cool-gray-50);
+  --color-bg-subtle: var(--color-cool-gray-100);
+  /* Interactive hover only — distinct from bg-subtle's *static*
+   * differentiation (zebra rows, section dividers) so a hovered row
+   * reads as hovered even when it's already zebra-striped. Used by
+   * Data Table rows, Select/Dropdown Menu/Combobox items, Date Picker
+   * day cells, Accordion triggers, ghost Button, Pagination items. */
+  --color-bg-hover: var(--color-cool-gray-200);
+  --color-bg-elevated: var(--color-cool-gray-50);
+  /* No alpha-channel primitives exist yet, so the overlay/scrim token
+   * maps to a solid neutral; consumers apply opacity themselves until
+   * the token system supports alpha (tracked for a future primitive
+   * token addition, not a 0.4.1 concern). */
+  --color-bg-overlay: var(--color-cool-gray-950);
+  /* Opaque "always contrasts with the page" surface — Tooltip, dark
+   * Toast variant. Theme-inverting on purpose (dark.css mirrors this to
+   * cool-gray-50): the page itself flips between themes, so a fixed
+   * value would eventually match the page it's supposed to always
+   * stand out from — confirmed when Tooltip actually consumed this
+   * token and turned invisible against a dark-mode page. Not to be
+   * confused with text-on-solid below, which fixed-across-themes text
+   * (Button's primary/destructive labels) still needs. */
+  --color-bg-inverse: var(--color-cool-gray-950);
+
+  /* Text */
+  --color-text-primary: var(--color-cool-gray-950);
+  --color-text-secondary: var(--color-cool-gray-600);
+  /* Between secondary and disabled in emphasis — hint text that reads
+   * as more legible than a disabled control but less prominent than
+   * real content. Input/Textarea/Select/Combobox placeholder text. */
+  --color-text-placeholder: var(--color-cool-gray-400);
+  /* Disabled text is intentionally exempt from WCAG AA (see
+   * packages/tokens/src/__tests__/contrast.test.ts, which pins this
+   * exact pairing — cool-gray-300 on cool-gray-50 — as an expected
+   * contrast *failure*). Disabled surfaces/borders are handled at the
+   * component layer via opacity, not a dedicated color token — a
+   * numeric transform, not a new hue/lightness decision. */
+  --color-text-disabled: var(--color-cool-gray-300);
+  --color-text-inverse: var(--color-cool-gray-50);
+  /* Text laid directly on a solid accent/status fill (Button's primary
+   * and destructive labels: `bg-accent`/`bg-status-error` +
+   * `text-text-on-solid`). Fixed across themes on purpose, unlike
+   * text-inverse above: accent-default is the same blue-500 in both
+   * light and dark mode (see theme-default/dark.css), so the label on
+   * top of it needs to stay the same light color regardless of theme,
+   * not invert with the page. */
+  --color-text-on-solid: var(--color-cool-gray-50);
+
+  /* Border */
+  --color-border-default: var(--color-cool-gray-200);
+  --color-border-strong: var(--color-cool-gray-400);
+  --color-border-error: var(--color-red-500);
+
+  /* Accent — default (blue). Per-tool theme packages (Calc/Construct/
+   * etc.) only ever override these four `accent-*` variables. `border-focus` and
+   * `accent-text` below are declared as chains *into* this group
+   * (`var(--color-accent-default)` / `var(--color-accent-hover)`)
+   * rather than fixed primitives, specifically so a per-tool override
+   * of `accent-default`/`accent-hover` propagates to the focus ring
+   * and link color automatically, via ordinary CSS custom-property
+   * cascading — no per-tool theme file needs to know these two tokens
+   * exist, and this package needs no knowledge of what overrides it. */
+  --color-accent-default: var(--color-blue-500);
+  --color-accent-hover: var(--color-blue-600);
+  --color-accent-active: var(--color-blue-700);
+  --color-accent-subtle: var(--color-blue-50);
+  /* accent-text is used as a text/icon color (e.g. links), which needs
+   * more contrast against bg-base than accent-default's 500 step
+   * provides — chains to accent-hover (600) rather than
+   * accent-default, both for that contrast and because accent-hover is
+   * already part of every per-tool override. */
+  --color-accent-text: var(--color-accent-hover);
+  /* Focus ring chains to accent-default so it re-brands per tool
+   * (teal for Calc, violet for Construct, ...) rather than staying a
+   * fixed Scaffold blue everywhere. */
+  --color-border-focus: var(--color-accent-default);
+
+  /* Status — text/icon step chosen for AA contrast against bg-base;
+   * -bg steps chosen as tinted, low-saturation background fills.
+   * status-error additionally gets hover/active steps (unlike the
+   * other three) because it's the only status color used as an
+   * interactive fill — Button's `destructive` variant needs
+   * default/hover/active like every other button variant. Extending
+   * status-error rather than adding a parallel `danger-*` namespace
+   * keeps error feedback under one name across Toast, Badge, and
+   * Button. */
+  --color-status-success: var(--color-green-600);
+  --color-status-success-bg: var(--color-green-50);
+  --color-status-warning: var(--color-amber-700);
+  --color-status-warning-bg: var(--color-amber-50);
+  --color-status-error: var(--color-red-600);
+  --color-status-error-hover: var(--color-red-700);
+  --color-status-error-active: var(--color-red-800);
+  --color-status-error-bg: var(--color-red-50);
+  --color-status-info: var(--color-sky-600);
+  --color-status-info-bg: var(--color-sky-50);
+  --color-status-neutral: var(--color-cool-gray-600);
+  /* success/warning/error/info all ship a `-bg` pair; neutral needs one
+   * too, so Badge's `default` variant carries the same visual weight as
+   * its four siblings. */
+  --color-status-neutral-bg: var(--color-cool-gray-100);
+}

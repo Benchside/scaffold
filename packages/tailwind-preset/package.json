@@ -1,0 +1,48 @@
+{
+  "name": "@benchside/scaffold-tailwind",
+  "version": "0.0.1",
+  "description": "Tailwind CSS v4 preset exposing @benchside/scaffold's semantic tokens as utility classes.",
+  "type": "module",
+  "style": "./dist/index.css",
+  "exports": {
+    ".": "./dist/index.css",
+    "./css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:browser": "playwright test",
+    "prepublishOnly": "node ../../scripts/copy-license.mjs"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  },
+  "keywords": [
+    "tailwindcss",
+    "tailwind-plugin",
+    "design-system",
+    "css"
+  ],
+  "author": "Benchside",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchside/scaffold.git",
+    "directory": "packages/tailwind-preset"
+  },
+  "homepage": "https://github.com/benchside/scaffold/tree/main/packages/tailwind-preset",
+  "bugs": "https://github.com/benchside/scaffold/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^4.3.3"
+  }
+}
