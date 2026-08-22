@@ -44,11 +44,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benchside/scaffold.git",
+    "url": "git+https://github.com/Benchside/scaffold.git",
     "directory": "packages/tokens"
   },
-  "homepage": "https://github.com/benchside/scaffold/tree/main/packages/tokens",
-  "bugs": "https://github.com/benchside/scaffold/issues",
+  "homepage": "https://github.com/Benchside/scaffold/tree/main/packages/tokens",
+  "bugs": "https://github.com/Benchside/scaffold/issues",
   "publishConfig": {
     "access": "public"
   }

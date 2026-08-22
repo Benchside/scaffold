@@ -49,9 +49,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benchside/scaffold.git"
+    "url": "git+https://github.com/Benchside/scaffold.git"
   },
-  "homepage": "https://github.com/benchside/scaffold#readme",
-  "bugs": "https://github.com/benchside/scaffold/issues",
+  "homepage": "https://github.com/Benchside/scaffold#readme",
+  "bugs": "https://github.com/Benchside/scaffold/issues",
   "packageManager": "pnpm@11.21.0"
 }
