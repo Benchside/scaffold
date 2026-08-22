@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benchside/scaffold.git",
+    "url": "git+https://github.com/Benchside/scaffold.git",
     "directory": "apps/docs"
   },
   "devDependencies": {
