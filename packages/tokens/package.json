@@ -1,6 +1,6 @@
 {
   "name": "@benchside/scaffold-tokens",
-  "version": "0.0.1",
+  "version": "0.1.0-beta.0",
   "description": "Primitive design tokens for @benchside/scaffold — DTCG tokens.json built to CSS, JS, and TypeScript.",
   "type": "module",
   "main": "./dist/tokens.js",
